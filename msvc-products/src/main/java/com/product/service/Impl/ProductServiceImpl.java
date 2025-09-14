@@ -43,8 +43,11 @@ public class ProductServiceImpl implements ProductService {
 //        future.join(); //-> sincrono
 
         //****** SINCRONO
-
+        logger.info("Antes de publicar el ProductCreateEvent");
         SendResult<String, ProductCreateEvent> result = kafkaTemplate.send("product-created-events-topic", productId, productCreateEvent).get();
+        logger.info("Paticion {}", result.getRecordMetadata().partition());
+        logger.info("Topic {}", result.getRecordMetadata().topic());
+        logger.info("Offset {}", result.getRecordMetadata().offset());
         logger.info("********Retorna el producto id");
         return productId;
     }

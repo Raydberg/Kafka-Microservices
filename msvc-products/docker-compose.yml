@@ -1,0 +1,72 @@
+name: "kafka-practice"
+services:
+  kafka1:
+    image: bitnami/kafka:3.5.1
+    environment:
+      KAFKA_KRAFT_CLUSTER_ID: "xZ0LfjqfSW-xY3LncJs9aw"
+      KAFKA_CFG_PROCESS_ROLES: "broker,controller"
+      KAFKA_CFG_NODE_ID: "1"
+      KAFKA_CFG_LISTENERS: "PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093"
+      KAFKA_CFG_ADVERTISED_LISTENERS: "PLAINTEXT://kafka1:9092"
+      KAFKA_CFG_CONTROLLER_LISTENER_NAMES: "CONTROLLER"
+      KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: "1@kafka1:9093,2@kafka2:9093,3@kafka3:9093"
+      KAFKA_CFG_INTER_BROKER_LISTENER_NAME: "PLAINTEXT"
+      # KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: "CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT"
+    ports:
+      - "9092:9092"
+    volumes:
+      - kafka1-data:/bitnami/kafka
+
+  kafka2:
+    image: bitnami/kafka:3.5.1
+    environment:
+      KAFKA_KRAFT_CLUSTER_ID: "xZ0LfjqfSW-xY3LncJs9aw"
+      KAFKA_CFG_PROCESS_ROLES: "broker,controller"
+      KAFKA_CFG_NODE_ID: "2"
+      KAFKA_CFG_LISTENERS: "PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093"
+      KAFKA_CFG_ADVERTISED_LISTENERS: "PLAINTEXT://kafka2:9092"
+      KAFKA_CFG_CONTROLLER_LISTENER_NAMES: "CONTROLLER"
+      KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: "1@kafka1:9093,2@kafka2:9093,3@kafka3:9093"
+      KAFKA_CFG_INTER_BROKER_LISTENER_NAME: "PLAINTEXT"
+      # KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: "CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT"
+    ports:
+      - "9094:9092"
+    volumes:
+      - kafka2-data:/bitnami/kafka
+
+  kafka3:
+    image: bitnami/kafka:3.5.1
+    environment:
+      KAFKA_KRAFT_CLUSTER_ID: "xZ0LfjqfSW-xY3LncJs9aw"
+      KAFKA_CFG_PROCESS_ROLES: "broker,controller"
+      KAFKA_CFG_NODE_ID: "3"
+      KAFKA_CFG_LISTENERS: "PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093"
+      KAFKA_CFG_ADVERTISED_LISTENERS: "PLAINTEXT://kafka3:9092"
+      KAFKA_CFG_CONTROLLER_LISTENER_NAMES: "CONTROLLER"
+      KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: "1@kafka1:9093,2@kafka2:9093,3@kafka3:9093"
+      KAFKA_CFG_INTER_BROKER_LISTENER_NAME: "PLAINTEXT"
+      # KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: "CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT"
+    ports:
+      - "9096:9092"
+    volumes:
+      - kafka3-data:/bitnami/kafka
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - kafka1
+      - kafka2
+      - kafka3
+    environment:
+      - SPRING_KAFKA_PRODUCER_BOOTSTRAP_SERVERS=kafka1:9092,kafka2:9092,kafka3:9092
+      - SPRING_SERVER_PORT=8080
+    ports:
+      - "8080:8080"
+    restart: on-failure
+
+volumes:
+  kafka1-data:
+  kafka2-data:
+  kafka3-data:

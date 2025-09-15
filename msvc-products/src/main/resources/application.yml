@@ -15,12 +15,13 @@ spring:
 #      retries: 10
       properties:
         # tiempo en que un producer espera antes de hacer un reintentor y envio
-#        retry.backoff.ms: 1000
+        #        retry.backoff.ms: 1000
         # Tiempo maxino en que el producer espra a que complete todo el envio
         delivery.timeout.ms: 120000 # Debe ser mayor o igual a la suma linger y timeour >=   linger + timout
         # MI productos envia lo mas rapido el mensaje
         linger.ms: 0
         request.timeout.ms: 30000
-
+        # Para activar la idempotencia el acks debe ser all
+        enable.idempotence: true
 server:
   port: 8080

@@ -32,6 +32,11 @@ public class KafkaConfig {
     @Value("${spring.kafka.producer.properties.request.timeout.ms}")
     private String requestTimeout;
 
+    @Value("${spring.kafka.producer.properties.enable.idempotence}")
+    private boolean idempotence;
+    @Value("${spring.kafka.producer.properties.max.in.flight.requests.per.connection}")
+//    Para que funcione la idemponentecia este valor no debe ser mayot de 5
+    private Integer inflightRequests;
 
     Map<String, Object> producerConfigs() {
         Map<String, Object> config = new HashMap<>();
@@ -42,7 +47,9 @@ public class KafkaConfig {
         config.put(ProducerConfig.DELIVERY_TIMEOUT_MS_CONFIG, deliveryTimeout);
         config.put(ProducerConfig.LINGER_MS_CONFIG, linger);
         config.put(ProducerConfig.REQUEST_TIMEOUT_MS_CONFIG, requestTimeout);
-
+        config.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, idempotence);
+        config.put(ProducerConfig.MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION, inflightRequests);
+//        config.put(ProducerConfig.RETRIES_CONFIG, Integer.MAX_VALUE); //Optional ya que por defecto ya lo es
         return config;
     }
 
@@ -57,9 +64,6 @@ public class KafkaConfig {
     KafkaTemplate<String, ProductCreateEvent> kafkaTemplate() {
         return new KafkaTemplate<String, ProductCreateEvent>(producerFactory());
     }
-
-
-
 
 
     @Bean

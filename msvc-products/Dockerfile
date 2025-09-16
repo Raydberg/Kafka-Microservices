@@ -1,21 +1,3 @@
-#FROM openjdk:21-jdk-slim
-#WORKDIR /app
-#
-#COPY pom.xml .
-#COPY mvnw .
-#COPY .mvn .mvn
-#RUN chmod +x mvnw
-#RUN ./mvnw dependency:go-offline -B
-#
-#COPY src ./src
-#
-#EXPOSE 8080 5005
-#
-#CMD ["sh", "-c", "./mvnw spring-boot:run -Dspring-boot.run.fork=false -Dspring-boot.run.jvmArguments='-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005'"]
-
-
-# dockerfile
-
 FROM openjdk:21-jdk-slim
 WORKDIR /app
 COPY msvc-products/mvnw ./

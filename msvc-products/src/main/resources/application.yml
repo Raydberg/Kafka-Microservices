@@ -2,9 +2,9 @@ spring:
   application:
     name: msvc-products
   kafka:
-    bootstrap-servers: broker1:9092,broker2:9092,broker3:9092
+    bootstrap-servers: broker1:9092,broker2:9094,broker3:9096
     producer:
-      bootstrap-servers: broker1:9092,broker2:9092,broker3:9092
+      bootstrap-servers: broker1:9092,broker2:9094,broker3:9096
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
       # Controla cuantos acuses(cluster) derecibo requiere el producer del cluster de kafka antes

@@ -3,7 +3,7 @@ spring:
     name: msvc-email-notification
 
   kafka:
-    bootstrap-servers: broker1:9092,broker2:9092,broker3:9092
+    bootstrap-servers: broker1:9092,broker2:9094,broker3:9096
     consumer:
       bootstrap-servers: broker1:9092,broker2:9092,broker3:9092
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer

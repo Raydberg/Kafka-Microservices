@@ -2,9 +2,9 @@ spring:
   application:
     name: msvc-products
   kafka:
-    bootstrap-servers: kafka1:9092,kafka2:9092,kafka3:9092
+    bootstrap-servers: broker1:9092,broker2:9092,broker3:9092
     producer:
-      bootstrap-servers: kafka1:9092,kafka2:9092,kafka3:9092
+      bootstrap-servers: broker1:9092,broker2:9092,broker3:9092
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
       # Controla cuantos acuses(cluster) derecibo requiere el producer del cluster de kafka antes
@@ -12,7 +12,7 @@ spring:
       acks: all # Espera a que todas las replicas sincronizadas se guanden el mensaje
       # El numero de veces en que kafka intentara enviar un mensaje
       # por defecto es un numero grande
-#      retries: 10
+      #      retries: 10
       properties:
         # tiempo en que un producer espera antes de hacer un reintentor y envio
         #        retry.backoff.ms: 1000
@@ -23,5 +23,6 @@ spring:
         request.timeout.ms: 30000
         # Para activar la idempotencia el acks debe ser all
         enable.idempotence: true
+        max.in.flight.requests.per.connection: 5
 server:
   port: 8080

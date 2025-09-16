@@ -1,0 +1,103 @@
+version: "3.8"
+services:
+  broker1:
+    image: bitnami/kafka:3.5.1
+    container_name: broker1
+    environment:
+      KAFKA_KRAFT_CLUSTER_ID: "xZ0LfjqfSW-xY3LncJs9aw"
+      KAFKA_CFG_PROCESS_ROLES: "broker,controller"
+      KAFKA_CFG_NODE_ID: "1"
+      KAFKA_CFG_LISTENERS: "PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093"
+      KAFKA_CFG_ADVERTISED_LISTENERS: "PLAINTEXT://broker1:9092"
+      KAFKA_CFG_CONTROLLER_LISTENER_NAMES: "CONTROLLER"
+      KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: "1@broker1:9093,2@broker2:9093,3@broker3:9093"
+      KAFKA_CFG_INTER_BROKER_LISTENER_NAME: "PLAINTEXT"
+    ports:
+      - "9092:9092"
+    volumes:
+      - broker1-data:/bitnami/kafka
+
+  broker2:
+    image: bitnami/kafka:3.5.1
+    container_name: broker2
+    environment:
+      KAFKA_KRAFT_CLUSTER_ID: "xZ0LfjqfSW-xY3LncJs9aw"
+      KAFKA_CFG_PROCESS_ROLES: "broker,controller"
+      KAFKA_CFG_NODE_ID: "2"
+      KAFKA_CFG_LISTENERS: "PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093"
+      KAFKA_CFG_ADVERTISED_LISTENERS: "PLAINTEXT://broker2:9092"
+      KAFKA_CFG_CONTROLLER_LISTENER_NAMES: "CONTROLLER"
+      KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: "1@broker1:9093,2@broker2:9093,3@broker3:9093"
+      KAFKA_CFG_INTER_BROKER_LISTENER_NAME: "PLAINTEXT"
+    ports:
+      - "9094:9092"
+    volumes:
+      - broker2-data:/bitnami/kafka
+
+  broker3:
+    image: bitnami/kafka:3.5.1
+    container_name: broker3
+    environment:
+      KAFKA_KRAFT_CLUSTER_ID: "xZ0LfjqfSW-xY3LncJs9aw"
+      KAFKA_CFG_PROCESS_ROLES: "broker,controller"
+      KAFKA_CFG_NODE_ID: "3"
+      KAFKA_CFG_LISTENERS: "PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093"
+      KAFKA_CFG_ADVERTISED_LISTENERS: "PLAINTEXT://broker3:9092"
+      KAFKA_CFG_CONTROLLER_LISTENER_NAMES: "CONTROLLER"
+      KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: "1@broker1:9093,2@broker2:9093,3@broker3:9093"
+      KAFKA_CFG_INTER_BROKER_LISTENER_NAME: "PLAINTEXT"
+    ports:
+      - "9096:9092"
+    volumes:
+      - broker3-data:/bitnami/kafka
+
+  msvc-products:
+    build:
+      context: .
+      dockerfile: msvc-products/Dockerfile
+    container_name: msvc-products
+    volumes:
+      - ./msvc-products/src:/app/src
+      - ./msvc-products/pom.xml:/app/pom.xml
+      - ./msvc-products/mvnw:/app/mvnw
+      - ./msvc-products/.mvn:/app/.mvn
+    environment:
+      - SPRING_KAFKA_PRODUCER_BOOTSTRAP_SERVERS=broker1:9092,broker2:9092,broker3:9092
+      - SPRING_SERVER_PORT=8080
+      - SPRING_DEVTOOLS_REMOTE_SECRET=dev
+    ports:
+      - "8080:8080"
+      - "5005:5005"
+    depends_on:
+      - broker1
+      - broker2
+      - broker3
+    restart: on-failure
+
+  msvc-email-notification:
+    build:
+      context: .
+      dockerfile: msvc-email-notification/Dockerfile
+    container_name: msvc-email-notification
+    volumes:
+      - ./msvc-email-notification/src:/app/src
+      - ./msvc-email-notification/pom.xml:/app/pom.xml
+      - ./msvc-email-notification/mvnw:/app/mvnw
+      - ./msvc-email-notification/.mvn:/app/.mvn
+    environment:
+      - SPRING_KAFKA_PRODUCER_BOOTSTRAP_SERVERS=broker1:9092,broker2:9092,broker3:9092
+      - SPRING_SERVER_PORT=8081
+      - SPRING_DEVTOOLS_REMOTE_SECRET=dev
+    ports:
+      - "8081:8081"
+      - "5006:5005"
+    depends_on:
+      - broker1
+      - broker2
+      - broker3
+    restart: on-failure
+
+volumes:
+  broker1-data:
+  broker2-data:
+  broker3-data:

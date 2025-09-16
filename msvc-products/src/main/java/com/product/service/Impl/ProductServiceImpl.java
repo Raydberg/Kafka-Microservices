@@ -1,7 +1,7 @@
 package com.product.service.Impl;
 
+import com.core.ProductCreateEvent;
 import com.product.entity.Product;
-import com.product.events.ProductCreateEvent;
 import com.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;

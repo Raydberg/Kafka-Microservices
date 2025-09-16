@@ -1,6 +1,6 @@
 package com.product.config;
 
-import com.product.events.ProductCreateEvent;
+import com.core.ProductCreateEvent;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,8 +34,7 @@ public class KafkaConfig {
 
     @Value("${spring.kafka.producer.properties.enable.idempotence}")
     private boolean idempotence;
-    @Value("${spring.kafka.producer.properties.max.in.flight.requests.per.connection}")
-//    Para que funcione la idemponentecia este valor no debe ser mayot de 5
+    @Value("${spring.kafka.producer.properties.max.in.flight.requests.per.connection:5}")
     private Integer inflightRequests;
 
     Map<String, Object> producerConfigs() {

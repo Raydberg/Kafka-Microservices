@@ -1,19 +1,18 @@
 spring:
   application:
     name: msvc-email-notification
-
   kafka:
-    bootstrap-servers: broker1:9092,broker2:9094,broker3:9096
+#    bootstrap-servers: broker1:9092,broker2:9094,broker3:9096
     consumer:
-      bootstrap-servers: broker1:9092,broker2:9092,broker3:9092
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+#      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+#      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       # Es un grupo de microservicios o un grupo de consumidores kafka que trabajan juntos
       # para consumit un topic
       group-id: product-created-events
       properties:
         # se recomiendo usar nombre de paquetes que solo se usaran y no "*
-        spring.json.trusted.packages: '*'
+        spring.json.trusted.packages: "com.core"
+      bootstrap-servers: broker1:9092,broker2:9094,broker3:9096
 
 
 
